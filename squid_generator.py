@@ -1,4 +1,3 @@
-
 import io
 import time
 
@@ -77,7 +76,7 @@ def free_filename():
     return "%s%s-%d.nfc" % (OUTPUT_DIR, OUTPUT_NAME, i)
 
 
-def create_tag(uid_hex):
+def create_tag(uid_hex, filename=None):
 
     uid_hex = uid_hex.upper()
     uid_bytes_hex = [uid_hex[i:i + 2] for i in range(0, 14, 2)]
@@ -86,7 +85,11 @@ def create_tag(uid_hex):
     template = f.read()
     f.close()
 
-    out_path = free_filename()
+    if filename is not None:
+        out_path = filename
+    else:
+        out_path = free_filename()
+
     f = io.open(out_path, "w")
     f.write(fill_template(template, uid_bytes_hex, uid_hex))
     f.close()
@@ -190,11 +193,16 @@ def run_flipper():
     show_message("Saved", path.replace(OUTPUT_DIR, ""))
 
 
-if ON_FLIPPER:
-    try:
-        run_flipper()
-    except Exception as e:
-        print("error:", repr(e))
-        show_message("Error", repr(e)[:60])
-else:
-    run_pc()
+def main():
+    if ON_FLIPPER:
+        try:
+            run_flipper()
+        except Exception as e:
+            print("error:", repr(e))
+            show_message("Error", repr(e)[:60])
+    else:
+        run_pc()
+
+
+if __name__ == "__main__":
+    main()
