@@ -1,5 +1,5 @@
 *.nfc
 !template.nfc
-.csv
+tags.csv
 .txt
 __pycache__/
